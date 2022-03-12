@@ -70,7 +70,6 @@ class ASTree:
 
                             # if j + 1 < len(partial_expression):
                             #     if partial_expression[j+1] == '*' or partial_expression[j+1] == '+' or partial_expression[j+1] == '?':
-                            #         print("HOLA", partial_expression[i+1:j+1])
                             #         new_partial_expression = partial_expression[i+1:j+1]
                             #         fin = j+1
 
@@ -87,11 +86,8 @@ class ASTree:
                         self.add_node(".", partial_expression[i], partial_expression[i+1])
                     elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and regex.match(r'[a-zA-Z]', partial_expression[i+2]):
                         self.add_node("|", partial_expression[i], partial_expression[i+2])
-                    
-                        
-                # if i == 0:
-                #     break
-                # print(partial_expression[i])
+                    elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and partial_expression[i+2] == '(':
+                        self.add_node("|", partial_expression[i], partial_expression[i])
             i += 1
  
 
@@ -102,8 +98,10 @@ if __name__ == "__main__":
 
     re = "ab"
     re = "ab|c"
-    # re = "b|ab"
-    # re = "b|(ab)"
+    re = "abc|d"
+    re = "b|ab"
+    re = "b|abc"
+    re = "b|(ab)"
     # re = "(a|b)*abb"
     # re = "(c|(d|e))*abb"
     # re = "(c|(d|e))*abb(a|b)"
