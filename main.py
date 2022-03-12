@@ -16,15 +16,16 @@ class ASTree:
         self.current_node_head = None
         self.root_binary_tree = None
 
-    def add_node(self, content, left, right):
+    def add_node(self, content, left, right, use_head_for):
         if self.current_node_head is None:
             self.current_node_head = Node(content, Node(left), Node(right))
         else:
-            self.current_node_head = Node(content, self.current_node_head, Node(right))
-
-    @classmethod
-    def print_tree(cls, root_node):
-        print(root_node)
+            if use_head_for == "l":
+                self.current_node_head = Node(content, self.current_node_head, Node(right))
+            elif use_head_for == "r":
+                self.current_node_head = Node(content, Node(left), self.current_node_head)
+            else:
+                self.current_node_head = Node(content, Node(left), Node(right))
 
     def convert_to_binary_tree(self, parent_node, binary_tree_parent=None):
         if self.root_binary_tree is None:
@@ -39,13 +40,11 @@ class ASTree:
             binary_tree_parent.right = BinaryTreeNode(ord(parent_node.right.data))
             self.convert_to_binary_tree(parent_node.right, binary_tree_parent.right)
 
-
     def generate_tree(self):
         regular_ex = self.initial_regular_expression
 
         self.get_nodes(regular_ex)
 
-        # ASTree.print_tree(self.current_node_head)
         self.convert_to_binary_tree(self.current_node_head)
         print(self.root_binary_tree)
 
@@ -68,9 +67,6 @@ class ASTree:
                         break
             elif partial_expression[i] == '*' or partial_expression[i] == '+' or partial_expression[i] == '?':
                 print(partial_expression[i])
-            elif partial_expression[i] == '|':
-                print("HOLA1", partial_expression[i-1], partial_expression[i+1])
-                self.add_node("|", partial_expression[i-1], partial_expression[i+1])
             elif regex.match(r'[a-zA-Z]', partial_expression[i]):
 
                 fin = i
@@ -81,24 +77,26 @@ class ASTree:
 
                 for k in range(i, fin+1):
                     if k+1 < fin+1:
-                        self.add_node(".", partial_expression[k], partial_expression[k+1])
+                        print(partial_expression[k], partial_expression[k+1])
+                        self.add_node(".", partial_expression[k], partial_expression[k+1], "l")
 
                 i = fin
 
+                if i+1 < len(partial_expression):
+                    print("C", partial_expression[i+1])
+                    # aqui va lo de * o )*
 
-                # if i + 1 < len(partial_expression) and regex.match(r'[a-zA-Z]', partial_expression[i+1]):
-                #     # ab
-                #     print("HOLA2", partial_expression[i], partial_expression[i+1])
-                #     self.add_node(".", partial_expression[i], partial_expression[i+1])
-                #     i += 1
-                # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and regex.match(r'[a-zA-Z]', partial_expression[i+2]):
-                #     # a|b
-                #     print("HOLA3", partial_expression[i], partial_expression[i+2])
-                #     self.add_node("|", partial_expression[i], partial_expression[i+2])
-                #     i += 2
-                # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and partial_expression[i+2] == '(':
-                    # self.add_node("|", partial_expression[i], self.get_nodes(self.get_nodes_inside_parenthesis(partial_expression[i+3:])))
-                    # self.get_nodes_inside_parenthesis(partial_expression[i+3:])
+            elif partial_expression[i] == '|':
+                self.add_node("|", partial_expression[i], partial_expression[i+1], "l")
+
+            # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and regex.match(r'[a-zA-Z]', partial_expression[i+2]):
+            #     # a|b
+            #     print("HOLA3", partial_expression[i], partial_expression[i+2])
+            #     self.add_node("|", partial_expression[i], partial_expression[i+2])
+            #     i += 2
+            # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and partial_expression[i+2] == '(':
+                # self.add_node("|", partial_expression[i], self.get_nodes(self.get_nodes_inside_parenthesis(partial_expression[i+3:])))
+                # self.get_nodes_inside_parenthesis(partial_expression[i+3:])
             i += 1
 
 
@@ -107,13 +105,12 @@ if __name__ == "__main__":
     # re = "(b|b)*abb(a|b)*"
     # w = "babbaaaaa"
 
-    re = "ab"
-    re = "abc"
     re = "abcd"
     re = "ab|c"
     re = "abc|d"
     re = "(ab)|c"
     re = "(abc)|d"
+    re = "(abcd)|d"
     # re = "b|(ab)"
     # re = "b|ab"
     # re = "b|abc"
