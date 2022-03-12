@@ -32,11 +32,11 @@ class ASTree:
             self.root_binary_tree = BinaryTreeNode(ord(parent_node.data))
             binary_tree_parent = self.root_binary_tree
 
-        if parent_node.left is not None:
+        if parent_node.left is not None and parent_node.left.data is not None:
             binary_tree_parent.left = BinaryTreeNode(ord(parent_node.left.data))
             self.convert_to_binary_tree(parent_node.left, binary_tree_parent.left)
 
-        if parent_node.right is not None:
+        if parent_node.right is not None and parent_node.right.data is not None:
             binary_tree_parent.right = BinaryTreeNode(ord(parent_node.right.data))
             self.convert_to_binary_tree(parent_node.right, binary_tree_parent.right)
 
@@ -61,12 +61,17 @@ class ASTree:
                     elif partial_expression[j] == ')':
                         parentheses_counter -= 1
 
+                    extra = 0
                     if parentheses_counter == 0:
-                        self.get_nodes(partial_expression[i+1:j])
+                        if partial_expression[j] == ')':
+                            if j + 1 < len(partial_expression):
+                                if partial_expression[j+1] == '*' or partial_expression[j+1] == '+' or partial_expression[j+1] == '?':
+                                    extra += 2
+
+                        fin = j + extra
+                        self.get_nodes(partial_expression[i+1:fin])
                         i = j
                         break
-            elif partial_expression[i] == '*' or partial_expression[i] == '+' or partial_expression[i] == '?':
-                print(partial_expression[i])
             elif regex.match(r'[a-zA-Z]', partial_expression[i]):
 
                 fin = i
@@ -83,8 +88,25 @@ class ASTree:
                 i = fin
 
                 if i+1 < len(partial_expression):
-                    print("C", partial_expression[i+1])
-                    # aqui va lo de * o )*
+                    if partial_expression[i+1] == '*':
+                        print("A", partial_expression[i+1])
+                        self.add_node("*", partial_expression[i], None, "l")
+                    elif partial_expression[i+1] == '+':
+                        print("A", partial_expression[i+1])
+                    elif partial_expression[i+1] == '?':
+                        print("A", partial_expression[i+1])
+                    elif partial_expression[i+1] == ')':
+                        if i+2 < len(partial_expression):
+                            if partial_expression[i+2] == '*':
+                                print("B", partial_expression[i+2])
+                                self.add_node("*", partial_expression[i], None, "l")
+                            elif partial_expression[i+2] == '+':
+                                print("B", partial_expression[i+2])
+                            elif partial_expression[i+2] == '?':
+                                print("B", partial_expression[i+2])
+                    else:
+                        print("D")
+                        
 
             elif partial_expression[i] == '|':
                 self.add_node("|", partial_expression[i], partial_expression[i+1], "l")
@@ -110,7 +132,12 @@ if __name__ == "__main__":
     re = "abc|d"
     re = "(ab)|c"
     re = "(abc)|d"
+    re = "a*|c"
+    re = "ab*|c"
+    re = "(ab)*|c"
+    # re = "a(b)*|c" - ERROR
     re = "(abcd)|d"
+    re = "(abcd)*|d"
     # re = "b|(ab)"
     # re = "b|ab"
     # re = "b|abc"
