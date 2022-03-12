@@ -21,7 +21,7 @@ class ASTree:
             self.current_node_head = Node(content, Node(left), Node(right))
         else:
             self.current_node_head = Node(content, self.current_node_head, Node(right))
-    
+
     @classmethod
     def print_tree(cls, root_node):
         print(root_node)
@@ -72,21 +72,35 @@ class ASTree:
                 print("HOLA1", partial_expression[i-1], partial_expression[i+1])
                 self.add_node("|", partial_expression[i-1], partial_expression[i+1])
             elif regex.match(r'[a-zA-Z]', partial_expression[i]):
-                if i + 1 < len(partial_expression) and regex.match(r'[a-zA-Z]', partial_expression[i+1]):
-                    # ab
-                    print("HOLA2", partial_expression[i], partial_expression[i+1])
-                    self.add_node(".", partial_expression[i], partial_expression[i+1])
-                    i += 1
-                elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and regex.match(r'[a-zA-Z]', partial_expression[i+2]):
-                    # a|b
-                    print("HOLA3", partial_expression[i], partial_expression[i+2])
-                    self.add_node("|", partial_expression[i], partial_expression[i+2])
-                    i += 2
+
+                fin = i
+                for j in range(i+1, len(partial_expression)):
+                    if not regex.match(r'[a-zA-Z]', partial_expression[j]):
+                        break
+                    fin = j
+
+                for k in range(i, fin+1):
+                    if k+1 < fin+1:
+                        self.add_node(".", partial_expression[k], partial_expression[k+1])
+
+                i = fin
+
+
+                # if i + 1 < len(partial_expression) and regex.match(r'[a-zA-Z]', partial_expression[i+1]):
+                #     # ab
+                #     print("HOLA2", partial_expression[i], partial_expression[i+1])
+                #     self.add_node(".", partial_expression[i], partial_expression[i+1])
+                #     i += 1
+                # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and regex.match(r'[a-zA-Z]', partial_expression[i+2]):
+                #     # a|b
+                #     print("HOLA3", partial_expression[i], partial_expression[i+2])
+                #     self.add_node("|", partial_expression[i], partial_expression[i+2])
+                #     i += 2
                 # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and partial_expression[i+2] == '(':
                     # self.add_node("|", partial_expression[i], self.get_nodes(self.get_nodes_inside_parenthesis(partial_expression[i+3:])))
                     # self.get_nodes_inside_parenthesis(partial_expression[i+3:])
             i += 1
- 
+
 
 
 if __name__ == "__main__":
@@ -95,10 +109,11 @@ if __name__ == "__main__":
 
     re = "ab"
     re = "abc"
-    # re = "ab|c"
-    # re = "abc|d"
-    # re = "(ab)|c"
-    # re = "(abc)|d"
+    re = "abcd"
+    re = "ab|c"
+    re = "abc|d"
+    re = "(ab)|c"
+    re = "(abc)|d"
     # re = "b|(ab)"
     # re = "b|ab"
     # re = "b|abc"
