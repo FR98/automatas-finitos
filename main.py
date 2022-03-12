@@ -33,38 +33,20 @@ class ASTree:
 
         if parent_node.left is not None:
             binary_tree_parent.left = BinaryTreeNode(ord(parent_node.left.data))
-            self.convert_to_binary_tree(parent_node.left, binary_tree_parent)
+            self.convert_to_binary_tree(parent_node.left, binary_tree_parent.left)
 
         if parent_node.right is not None:
             binary_tree_parent.right = BinaryTreeNode(ord(parent_node.right.data))
-            self.convert_to_binary_tree(parent_node.right, binary_tree_parent)
+            self.convert_to_binary_tree(parent_node.right, binary_tree_parent.right)
 
     def generate_tree(self):
-        # regular_expression = "(" + self.initial_regular_expression + ")"
         regular_expression = self.initial_regular_expression
 
         self.get_operations_inside_parenthesis(regular_expression)
-        # print(content)
-        ASTree.print_tree(self.current_node_head)
+
+        # ASTree.print_tree(self.current_node_head)
         self.convert_to_binary_tree(self.current_node_head)
         print(self.root_binary_tree)
-
-
-
-    # def get_operations_inside_parenthesis(self, partial_expression):
-    #     print("Partial expression: " + partial_expression)
-    #     parentheses_counter = 0
-    #     for i in range(len(partial_expression)):
-    #         # print(partial_expression[i])
-    #         if partial_expression[i] == '(':
-    #             parentheses_counter += 1
-    #             for j in range(i+1, len(partial_expression)):
-    #                 if partial_expression[j] == '(':
-    #                     parentheses_counter += 1
-    #                 elif partial_expression[j] == ')':
-    #                     parentheses_counter -= 1
-    #                     if parentheses_counter == 0:
-    #                         return self.get_operations_inside_parenthesis(partial_expression[i+1:j])
     
     def get_operations_inside_parenthesis(self, partial_expression):
         print("Partial expression: " + partial_expression)
@@ -119,7 +101,7 @@ if __name__ == "__main__":
     # w = "babbaaaaa"
 
     re = "ab"
-    re = "ab|a"
+    re = "ab|c"
     # re = "b|ab"
     # re = "b|(ab)"
     # re = "(a|b)*abb"
@@ -130,3 +112,13 @@ if __name__ == "__main__":
 
     ast = ASTree(re)
     ast.generate_tree()
+
+"""
+46 - .
+124 - |
+97 - a
+98 - b
+99 - c
+100 - d
+101 - e
+"""
