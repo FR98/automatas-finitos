@@ -39,55 +39,52 @@ class ASTree:
             binary_tree_parent.right = BinaryTreeNode(ord(parent_node.right.data))
             self.convert_to_binary_tree(parent_node.right, binary_tree_parent.right)
 
-    def generate_tree(self):
-        regular_expression = self.initial_regular_expression
 
-        self.get_operations_inside_parenthesis(regular_expression)
+    def generate_tree(self):
+        regular_ex = self.initial_regular_expression
+
+        self.get_nodes(regular_ex)
 
         # ASTree.print_tree(self.current_node_head)
         self.convert_to_binary_tree(self.current_node_head)
         print(self.root_binary_tree)
-    
-    def get_operations_inside_parenthesis(self, partial_expression):
-        print("Partial expression: " + partial_expression)
-        parentheses_counter = 0
+
+    def get_nodes(self, partial_expression):
+        print("Partial expression:", partial_expression)
+
         i = 0
         while i < len(partial_expression):
-            # print(i)
-            # print(partial_expression[i])
             if partial_expression[i] == '(':
-                parentheses_counter += 1
-                fin = i
+                parentheses_counter = 1
                 for j in range(i+1, len(partial_expression)):
-                    # print(partial_expression[j])
                     if partial_expression[j] == '(':
                         parentheses_counter += 1
                     elif partial_expression[j] == ')':
                         parentheses_counter -= 1
-                        if parentheses_counter == 0:
-                            fin = j
-                            new_partial_expression = partial_expression[i+1:fin]
 
-                            # if j + 1 < len(partial_expression):
-                            #     if partial_expression[j+1] == '*' or partial_expression[j+1] == '+' or partial_expression[j+1] == '?':
-                            #         new_partial_expression = partial_expression[i+1:j+1]
-                            #         fin = j+1
-
-                            # print(new_partial_expression)
-                            self.get_operations_inside_parenthesis(new_partial_expression)
-                            # print(partial_expression[i+1], partial_expression[j])
-                            # print(partial_expression[i+1:j])
-                            i = fin
-                            break
-            else:
-                if regex.match(r'[a-zA-Z]', partial_expression[i]):
-                    print(partial_expression[i])
-                    if i + 1 < len(partial_expression) and regex.match(r'[a-zA-Z]', partial_expression[i+1]):
-                        self.add_node(".", partial_expression[i], partial_expression[i+1])
-                    elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and regex.match(r'[a-zA-Z]', partial_expression[i+2]):
-                        self.add_node("|", partial_expression[i], partial_expression[i+2])
-                    elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and partial_expression[i+2] == '(':
-                        self.add_node("|", partial_expression[i], partial_expression[i])
+                    if parentheses_counter == 0:
+                        self.get_nodes(partial_expression[i+1:j])
+                        i = j
+                        break
+            elif partial_expression[i] == '*' or partial_expression[i] == '+' or partial_expression[i] == '?':
+                print(partial_expression[i])
+            elif partial_expression[i] == '|':
+                print("HOLA1", partial_expression[i-1], partial_expression[i+1])
+                self.add_node("|", partial_expression[i-1], partial_expression[i+1])
+            elif regex.match(r'[a-zA-Z]', partial_expression[i]):
+                if i + 1 < len(partial_expression) and regex.match(r'[a-zA-Z]', partial_expression[i+1]):
+                    # ab
+                    print("HOLA2", partial_expression[i], partial_expression[i+1])
+                    self.add_node(".", partial_expression[i], partial_expression[i+1])
+                    i += 1
+                elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and regex.match(r'[a-zA-Z]', partial_expression[i+2]):
+                    # a|b
+                    print("HOLA3", partial_expression[i], partial_expression[i+2])
+                    self.add_node("|", partial_expression[i], partial_expression[i+2])
+                    i += 2
+                # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and partial_expression[i+2] == '(':
+                    # self.add_node("|", partial_expression[i], self.get_nodes(self.get_nodes_inside_parenthesis(partial_expression[i+3:])))
+                    # self.get_nodes_inside_parenthesis(partial_expression[i+3:])
             i += 1
  
 
@@ -97,11 +94,14 @@ if __name__ == "__main__":
     # w = "babbaaaaa"
 
     re = "ab"
-    re = "ab|c"
-    re = "abc|d"
-    re = "b|ab"
-    re = "b|abc"
-    re = "b|(ab)"
+    re = "abc"
+    # re = "ab|c"
+    # re = "abc|d"
+    # re = "(ab)|c"
+    # re = "(abc)|d"
+    # re = "b|(ab)"
+    # re = "b|ab"
+    # re = "b|abc"
     # re = "(a|b)*abb"
     # re = "(c|(d|e))*abb"
     # re = "(c|(d|e))*abb(a|b)"
