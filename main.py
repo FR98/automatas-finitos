@@ -82,30 +82,25 @@ class ASTree:
 
                 for k in range(i, fin+1):
                     if k+1 < fin+1:
-                        print(partial_expression[k], partial_expression[k+1])
                         self.add_node(".", partial_expression[k], partial_expression[k+1], "l")
 
                 i = fin
 
                 if i+1 < len(partial_expression):
                     if partial_expression[i+1] == '*':
-                        print("A", partial_expression[i+1])
                         self.add_node("*", partial_expression[i], None, "l")
                     elif partial_expression[i+1] == '+':
-                        print("A", partial_expression[i+1])
+                        self.add_node("+", partial_expression[i], None, "l")
                     elif partial_expression[i+1] == '?':
-                        print("A", partial_expression[i+1])
+                        self.add_node("?", partial_expression[i], None, "l")
                     elif partial_expression[i+1] == ')':
                         if i+2 < len(partial_expression):
                             if partial_expression[i+2] == '*':
-                                print("B", partial_expression[i+2])
                                 self.add_node("*", partial_expression[i], None, "l")
                             elif partial_expression[i+2] == '+':
-                                print("B", partial_expression[i+2])
+                                self.add_node("+", partial_expression[i], None, "l")
                             elif partial_expression[i+2] == '?':
-                                print("B", partial_expression[i+2])
-                    else:
-                        print("D")
+                                self.add_node("?", partial_expression[i], None, "l")
                         
 
             elif partial_expression[i] == '|':
@@ -113,7 +108,6 @@ class ASTree:
 
             # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and regex.match(r'[a-zA-Z]', partial_expression[i+2]):
             #     # a|b
-            #     print("HOLA3", partial_expression[i], partial_expression[i+2])
             #     self.add_node("|", partial_expression[i], partial_expression[i+2])
             #     i += 2
             # elif i + 2 < len(partial_expression) and partial_expression[i+1] == '|' and partial_expression[i+2] == '(':
@@ -135,9 +129,13 @@ if __name__ == "__main__":
     re = "a*|c"
     re = "ab*|c"
     re = "(ab)*|c"
-    # re = "a(b)*|c" - ERROR
+    re = "(ab)+|c"
+    re = "(ab)?|c"
     re = "(abcd)|d"
     re = "(abcd)*|d"
+    # - ERROR
+    # re = "(a|b)*|c"
+    # re = "a(b)*|c"
     # re = "b|(ab)"
     # re = "b|ab"
     # re = "b|abc"
@@ -153,6 +151,9 @@ if __name__ == "__main__":
 """
 46 - .
 124 - |
+42 - *
+43 - +
+63 - ?
 97 - a
 98 - b
 99 - c
