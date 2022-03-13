@@ -114,12 +114,9 @@ class ASTree:
                                 self.add_node("+", Node(partial_expression[i]), None, "l")
                             elif partial_expression[i+2] == '?':
                                 self.add_node("?", Node(partial_expression[i]), None, "l")
-                
-                        
 
             elif partial_expression[i] == '|':
                 self.add_node("|", Node(partial_expression[i-1]), Node(partial_expression[i+1]), "l")
-
             else:
                 print("-", partial_expression[i])
 
@@ -153,13 +150,13 @@ if __name__ == "__main__":
     re = "(abcd)|e"
     re = "(abcd)*|e"
     re = "(a|b)*|c"
+    re = "(a|b)*c"
+    re = "(a|b)*abb"
     # - ERROR
-    # re = "a(b)*|c"
-    # re = "a|bc"
+    # re = "a(b)*|c" - No importante
+    re = "a|bc"
     # re = "a|(bc)"
     # re = "a|bcd"
-    # re = "(a|b)*a"
-    # re = "(a|b)*abb"
     # re = "(c|(d|e))*abb"
     # re = "(c|(d|e))*abb(a|b)"
     # re = "(a|b)*abb(c|(d|e))"
