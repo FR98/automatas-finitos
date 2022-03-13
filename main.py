@@ -32,7 +32,15 @@ class ASTree:
             if temp_root_index == len(self.temp_roots):
                 self.temp_roots.append(Node(content, left, right))
             elif temp_root_index < len(self.temp_roots):
-                print("Aver3", temp_root_index)
+                if self.temp_roots[temp_root_index] is None:
+                    self.temp_roots[temp_root_index] = Node(content, left, right)
+                else:
+                    if use_head_for == "l":
+                        self.temp_roots[temp_root_index] = Node(content, self.temp_roots[temp_root_index], right)
+                    elif use_head_for == "r":
+                        self.temp_roots[temp_root_index] = Node(content, left, self.temp_roots[temp_root_index])
+                    else:
+                        self.temp_roots[temp_root_index] = Node(content, left, right)
 
     def convert_to_binary_tree(self, parent_node, binary_tree_parent=None):
         if binary_tree_parent is None:
@@ -229,22 +237,22 @@ if __name__ == "__main__":
     re = "ab|cd"
     re = "a|bc"
     re = "a|(bc)"
+    re = "a|bcd"
+    re = "a|bcde"
+    re = "abc|def"
+    re = "a|(b|cd)"
+    re = "a|(b|c)"
+    re = "(c|(d|e))*abb"
     # - ERROR
     # re = "a(b)*|c" - No importante
-    re = "a|bcd"
-    # re = "a|bcde"
-    # re = "abc|def"
-    # re = "a|(b|cd)"
-    # re = "a|(b|c)"
-    # re = "(c|(d|e))*abb"
     # re = "(c|(d|e))*abb(a|b)"
     # re = "(a|b)*abb(c|(d|e))"
 
     # - EXAMPLE
-    # re = "(a|b)*((a|(bb))*E)"
+    re = "(a|b)*"
+    re = "((a|(bb))*)"
     # re = "(a|b)*((a|(bb))*)"
-    # re = "(a|b)*"
-    # re = "((a|(bb))*)"
+    # re = "(a|b)*((a|(bb))*E)"
     w = "baabb"
 
     ast = ASTree(re)
