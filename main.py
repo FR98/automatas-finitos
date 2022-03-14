@@ -6,7 +6,7 @@
 
 import re as regex
 from node import Node
-
+from binarytree import build
 
 class Tree:
     def __init__(self, initial_regular_expression):
@@ -202,7 +202,9 @@ if __name__ == "__main__":
     # re = "((a|b)*.((a|(bb))*)).E#"
 
     # - EXAMPLE
-    # re = "(b|b)*abb.(a|b)*" # La del ejemplo de las instrucciones
+    re = "(b|b)*abb.(a|b)*" # La del ejemplo de las instrucciones
+
+    re = "(a|b)*abb"
     w = "babbaaaaa"
 
     ast = Tree(re)
@@ -210,6 +212,11 @@ if __name__ == "__main__":
 
     print(arbol)
     print([chr(n.value) for n in arbol.postorder])
+
+    # print(arbol.values)
+    # print([chr(n) if n is not None else n for n in arbol.values])
+    # root = build(arbol.values)
+    # print(root)
 
 
 """
