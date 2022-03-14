@@ -118,29 +118,6 @@ class ASTree:
                         self.get_nodes(partial_expression[init:fin], temp_root_index)
                         i = j
                         break
-                # if partial_expression[init_i-1] == ")" or \
-                #     partial_expression[init_i-1] == "*" or \
-                #     partial_expression[init_i-1] == "+" or \
-                #     partial_expression[init_i-1] == "?" or \
-                #     regex.match(r"[a-zA-Z*]", partial_expression[init_i-1]):
-
-                #     fin_sub_re = self.get_final_of_expression(partial_expression[i+1:])
-                #     fin = i + 1 + fin_sub_re + 1
-                #     self.get_nodes(partial_expression[i+1:fin], len(self.temp_roots))
-
-                #     sub_tree_root = None
-                #     if temp_root_index is None:
-                #         # sub_tree_root = self.temp_roots[0]
-                #         if len(self.temp_roots) > 0:
-                #             sub_tree_root = self.temp_roots.pop()
-                #     else:
-                #         sub_tree_root = self.temp_roots.pop(temp_root_index + 1)
-
-
-                #     if sub_tree_root is not None:
-                #         self.add_node(temp_root_index, ".", Node(partial_expression[i-1]), sub_tree_root, "l")
-                    
-                #     i = i + fin + 1
             elif regex.match(r"[a-zA-Z*]", partial_expression[i]):
                 fin = i
                 for j in range(i+1, len(partial_expression)):
@@ -158,13 +135,10 @@ class ASTree:
                                 Node("*", Node(partial_expression[k+1]), None),
                                 "l"
                             )
-                            # fin += 1
                             break
                         else:
                             if partial_expression[k+1] != "*":
                                 self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node(partial_expression[k+1]), "l")
-                                # fin += 1
-                                # break
                             else:
                                 fin -= 1
                                 break
@@ -196,7 +170,6 @@ class ASTree:
                 self.get_nodes(partial_expression[i+1:fin], len(self.temp_roots))
 
                 if temp_root_index is None:
-                    # sub_tree_root = self.temp_roots[0]
                     sub_tree_root = self.temp_roots.pop()
                 else:
                     sub_tree_root = self.temp_roots.pop(temp_root_index + 1)
@@ -264,13 +237,14 @@ if __name__ == "__main__":
     # re = "a.(b)*|c"
 
     # - EXAMPLE
-    re = "(a|b)*"
-    re = "((a|(bb))*)"
-    re = "(a|b)*.((a|(bb))*)"
-    # re = "(a|b)*((a|(bb))*E)"
+    # re = "(a|b)*"
+    # re = "((a|(bb))*)"
+    re = "(a|b)*.((a|(bb))*)" # La del examen
+    # re = "(a|b)*.((a|(bb))*).E"
     w = "baabb"
 
-    # re = "(b|b)*abb(a|b)*"
+    # re = "(b|b)*abb.(a|b)*" # La del ejemplo de las instrucciones
+    # re = "(b|b)*abb.(a|b)*.(a|b)*" # La del ejemplo de las instrucciones
     # w = "babbaaaaa"
 
     ast = ASTree(re)
@@ -285,6 +259,7 @@ if __name__ == "__main__":
 43 - +
 46 - .
 63 - ?
+69 - E
 97 - a
 98 - b
 99 - c
