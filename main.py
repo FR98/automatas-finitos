@@ -98,7 +98,6 @@ class ASTree:
         i = 0
         while i < len(partial_expression):
             if partial_expression[i] == "(":
-                init_i = i
                 parentheses_counter = 1
                 for j in range(i+1, len(partial_expression)):
                     if partial_expression[j] == "(":
@@ -149,20 +148,12 @@ class ASTree:
                 i = fin
 
                 if i + 1 < len(partial_expression):
-                    if partial_expression[i+1] == "*":
-                        self.add_node(temp_root_index, "*", Node(partial_expression[i]), None, "l")
-                    elif partial_expression[i+1] == "+":
-                        self.add_node(temp_root_index, "+", Node(partial_expression[i]), None, "l")
-                    elif partial_expression[i+1] == "?":
-                        self.add_node(temp_root_index, "?", Node(partial_expression[i]), None, "l")
+                    if partial_expression[i+1] == "*" or partial_expression[i+1] == "+" or partial_expression[i+1] == "?":
+                        self.add_node(temp_root_index, partial_expression[i+1], Node(partial_expression[i]), None, "l")
                     elif partial_expression[i+1] == ")":
                         if i+2 < len(partial_expression):
-                            if partial_expression[i+2] == "*":
-                                self.add_node(temp_root_index, "*", Node(partial_expression[i]), None, "l")
-                            elif partial_expression[i+2] == "+":
-                                self.add_node(temp_root_index, "+", Node(partial_expression[i]), None, "l")
-                            elif partial_expression[i+2] == "?":
-                                self.add_node(temp_root_index, "?", Node(partial_expression[i]), None, "l")
+                            if partial_expression[i+2] == "*" or partial_expression[i+2] == "+" or partial_expression[i+2] == "?":
+                                self.add_node(temp_root_index, partial_expression[i+2], Node(partial_expression[i]), None, "l")
 
             elif partial_expression[i] == "|" or partial_expression[i] == ".":
                 fin_sub_re = self.get_final_of_expression(partial_expression[i+1:])
@@ -180,12 +171,8 @@ class ASTree:
 
                 if fin < len(partial_expression) and partial_expression[fin] == ")":
                     if fin + 1 < len(partial_expression):
-                        if partial_expression[fin + 1] == "*":
-                            self.add_node(temp_root_index, "*", Node(partial_expression[fin + 1]), None, "l")
-                        elif partial_expression[fin + 1] == "+":
-                            self.add_node(temp_root_index, "+", Node(partial_expression[fin + 1]), None, "l")
-                        elif partial_expression[fin + 1] == "?":
-                            self.add_node(temp_root_index, "?", Node(partial_expression[fin + 1]), None, "l")
+                        if partial_expression[fin + 1] == "*" or partial_expression[fin + 1] == "+" or partial_expression[fin + 1] == "?":
+                            self.add_node(temp_root_index, partial_expression[fin + 1], Node(partial_expression[fin + 1]), None, "l")
 
                 i = i + fin + 1
             else:
