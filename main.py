@@ -233,19 +233,18 @@ if __name__ == "__main__":
     re = "((c|(d|e))*).(a|b)"
     re = "(c|(d|e))*.(a|b)"
     re = "(a|b)*abb.(c|(d|e))"
-    # - ERROR
-    # re = "a.(b)*|c"
+    re = "((b|b)*abb.(a|b)*).(a|b)*"
+
+    # - EXAMEN
+    re = "(a|b)*"
+    re = "((a|(bb))*)"
+    re = "(a|b)*.((a|(bb))*)"
+    re = "((a|b)*.((a|(bb))*)).E"
+    # re = "((a|b)*.((a|(bb))*)).E#"
 
     # - EXAMPLE
-    # re = "(a|b)*"
-    # re = "((a|(bb))*)"
-    re = "(a|b)*.((a|(bb))*)" # La del examen
-    # re = "(a|b)*.((a|(bb))*).E"
-    w = "baabb"
-
     # re = "(b|b)*abb.(a|b)*" # La del ejemplo de las instrucciones
-    # re = "(b|b)*abb.(a|b)*.(a|b)*" # La del ejemplo de las instrucciones
-    # w = "babbaaaaa"
+    w = "babbaaaaa"
 
     ast = ASTree(re)
     arbol = ast.generate_tree()
