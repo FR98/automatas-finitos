@@ -6,7 +6,6 @@
 
 import re as regex
 from tree import Node
-from functools import partial
 from binarytree import Node as BinaryTreeNode
 
 
@@ -61,7 +60,7 @@ class ASTree:
 
         self.get_nodes(regular_ex, None)
 
-        print(self.convert_to_binary_tree(self.current_node_head))
+        return self.convert_to_binary_tree(self.current_node_head)
 
     def get_final_of_expression(self, partial_expression):
         i = 0
@@ -170,17 +169,16 @@ class ASTree:
             elif partial_expression[i] == "|":
                 fin_sub_re = self.get_final_of_expression(partial_expression[i+1:])
                 fin = i + 1 + fin_sub_re + 1
-                print("Hola", partial_expression[i+1:fin])
+                # print("Hola", partial_expression[i+1:fin])
                 self.get_nodes(partial_expression[i+1:fin], len(self.temp_roots))
-                print("Adios")
+                # print("Adios", temp_root_index, len(self.temp_roots))
 
-                print("g", self.temp_roots)
                 if temp_root_index is None:
-                    sub_tree_root = self.temp_roots[0]
-                    # print("f", self.temp_roots[0])
+                    # sub_tree_root = self.temp_roots[0]
+                    sub_tree_root = self.temp_roots.pop()
                 else:
-                    sub_tree_root = self.temp_roots[temp_root_index + 1]
-                    # print("h", self.temp_roots[temp_root_index + 1])
+                    sub_tree_root = self.temp_roots.pop(temp_root_index + 1)
+
 
                 if sub_tree_root is not None:
                     # binary_sub_tree_root = self.convert_to_binary_tree(sub_tree_root)
@@ -222,7 +220,7 @@ if __name__ == "__main__":
     re = "(abc)|d"
     re = "a*"
     re = "a*|c"
-    re = "(a)*|c"
+    re = "(a)*|b"
     re = "ab*|c"
     re = "(ab)*|c"
     re = "(ab)+|c"
@@ -234,29 +232,36 @@ if __name__ == "__main__":
     re = "(a|b)*|c"
     re = "(a|b)*c"
     re = "(a|b)*abb"
-    re = "ab|cd"
     re = "a|bc"
     re = "a|(bc)"
+    re = "ab|cd"
     re = "a|bcd"
     re = "a|bcde"
     re = "abc|def"
-    re = "a|(b|cd)"
     re = "a|(b|c)"
+    re = "a|(b|cd)"
     re = "(c|(d|e))*abb"
+    re = "(c|(d|(e|f)))*abc"
+    re = "(c|(d|(e|f)))*abb|h"
+    re = "(c|(d|e))*abb|(a|b)"
+    re = "(a|b)*abb|(c|(d|e))"
     # - ERROR
     # re = "a(b)*|c" - No importante
     # re = "(c|(d|e))*abb(a|b)"
     # re = "(a|b)*abb(c|(d|e))"
 
     # - EXAMPLE
-    re = "(a|b)*"
-    re = "((a|(bb))*)"
+    # re = "(a|b)*"
+    # re = "((a|(bb))*)"
     # re = "(a|b)*((a|(bb))*)"
     # re = "(a|b)*((a|(bb))*E)"
     w = "baabb"
 
     ast = ASTree(re)
-    ast.generate_tree()
+    arbol = ast.generate_tree()
+
+    print(arbol)
+    print([chr(n.value) for n in arbol.postorder])
 
     # re = "a(b)*|c" == "ab*|c"
     # re = "(ab)*|c"
@@ -272,5 +277,8 @@ if __name__ == "__main__":
 99 - c
 100 - d
 101 - e
+102 - f
+103 - g
+104 - h
 124 - |
 """
