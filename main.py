@@ -98,6 +98,7 @@ class ASTree:
         i = 0
         while i < len(partial_expression):
             if partial_expression[i] == "(":
+                init_i = i
                 parentheses_counter = 1
                 for j in range(i+1, len(partial_expression)):
                     if partial_expression[j] == "(":
@@ -117,6 +118,29 @@ class ASTree:
                         self.get_nodes(partial_expression[init:fin], temp_root_index)
                         i = j
                         break
+                # if partial_expression[init_i-1] == ")" or \
+                #     partial_expression[init_i-1] == "*" or \
+                #     partial_expression[init_i-1] == "+" or \
+                #     partial_expression[init_i-1] == "?" or \
+                #     regex.match(r"[a-zA-Z*]", partial_expression[init_i-1]):
+
+                #     fin_sub_re = self.get_final_of_expression(partial_expression[i+1:])
+                #     fin = i + 1 + fin_sub_re + 1
+                #     self.get_nodes(partial_expression[i+1:fin], len(self.temp_roots))
+
+                #     sub_tree_root = None
+                #     if temp_root_index is None:
+                #         # sub_tree_root = self.temp_roots[0]
+                #         if len(self.temp_roots) > 0:
+                #             sub_tree_root = self.temp_roots.pop()
+                #     else:
+                #         sub_tree_root = self.temp_roots.pop(temp_root_index + 1)
+
+
+                #     if sub_tree_root is not None:
+                #         self.add_node(temp_root_index, ".", Node(partial_expression[i-1]), sub_tree_root, "l")
+                    
+                #     i = i + fin + 1
             elif regex.match(r"[a-zA-Z*]", partial_expression[i]):
                 fin = i
                 for j in range(i+1, len(partial_expression)):
@@ -150,7 +174,7 @@ class ASTree:
 
                 i = fin
 
-                if i+1 < len(partial_expression):
+                if i + 1 < len(partial_expression):
                     if partial_expression[i+1] == "*":
                         self.add_node(temp_root_index, "*", Node(partial_expression[i]), None, "l")
                     elif partial_expression[i+1] == "+":
@@ -166,12 +190,10 @@ class ASTree:
                             elif partial_expression[i+2] == "?":
                                 self.add_node(temp_root_index, "?", Node(partial_expression[i]), None, "l")
 
-            elif partial_expression[i] == "|":
+            elif partial_expression[i] == "|" or partial_expression[i] == ".":
                 fin_sub_re = self.get_final_of_expression(partial_expression[i+1:])
                 fin = i + 1 + fin_sub_re + 1
-                # print("Hola", partial_expression[i+1:fin])
                 self.get_nodes(partial_expression[i+1:fin], len(self.temp_roots))
-                # print("Adios", temp_root_index, len(self.temp_roots))
 
                 if temp_root_index is None:
                     # sub_tree_root = self.temp_roots[0]
@@ -181,8 +203,7 @@ class ASTree:
 
 
                 if sub_tree_root is not None:
-                    # binary_sub_tree_root = self.convert_to_binary_tree(sub_tree_root)
-                    self.add_node(temp_root_index, "|", Node(partial_expression[i-1]), sub_tree_root, "l")
+                    self.add_node(temp_root_index, partial_expression[i], Node(partial_expression[i-1]), sub_tree_root, "l")
 
                 if fin < len(partial_expression) and partial_expression[fin] == ")":
                     if fin + 1 < len(partial_expression):
@@ -196,22 +217,11 @@ class ASTree:
                 i = i + fin + 1
             else:
                 print("-", partial_expression[i])
-
-            # elif i + 2 < len(partial_expression) and partial_expression[i+1] == "|" and regex.match(r"[a-zA-Z]", partial_expression[i+2]):
-            #     # a|b
-            #     self.add_node("|", partial_expression[i], partial_expression[i+2])
-            #     i += 2
-            # elif i + 2 < len(partial_expression) and partial_expression[i+1] == "|" and partial_expression[i+2] == "(":
-                # self.add_node("|", partial_expression[i], self.get_nodes(self.get_nodes_inside_parenthesis(partial_expression[i+3:])))
-                # self.get_nodes_inside_parenthesis(partial_expression[i+3:])
             i += 1
 
 
 
 if __name__ == "__main__":
-    # re = "(b|b)*abb(a|b)*"
-    # w = "babbaaaaa"
-
     re = "abcd"
     re = "a|b"
     re = "ab|c"
@@ -245,26 +255,29 @@ if __name__ == "__main__":
     re = "(c|(d|(e|f)))*abb|h"
     re = "(c|(d|e))*abb|(a|b)"
     re = "(a|b)*abb|(c|(d|e))"
+    re = "(c|(d|e))*abb.(a|b)"
+    re = "(c|(d|e))*.(a|b)"
+    re = "((c|(d|e))*).(a|b)"
+    re = "(c|(d|e))*.(a|b)"
+    re = "(a|b)*abb.(c|(d|e))"
     # - ERROR
-    # re = "a(b)*|c" - No importante
-    # re = "(c|(d|e))*abb(a|b)"
-    # re = "(a|b)*abb(c|(d|e))"
+    # re = "a.(b)*|c"
 
     # - EXAMPLE
-    # re = "(a|b)*"
-    # re = "((a|(bb))*)"
-    # re = "(a|b)*((a|(bb))*)"
+    re = "(a|b)*"
+    re = "((a|(bb))*)"
+    re = "(a|b)*.((a|(bb))*)"
     # re = "(a|b)*((a|(bb))*E)"
     w = "baabb"
+
+    # re = "(b|b)*abb(a|b)*"
+    # w = "babbaaaaa"
 
     ast = ASTree(re)
     arbol = ast.generate_tree()
 
     print(arbol)
     print([chr(n.value) for n in arbol.postorder])
-
-    # re = "a(b)*|c" == "ab*|c"
-    # re = "(ab)*|c"
 
 
 """
