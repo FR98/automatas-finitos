@@ -76,6 +76,7 @@ class Tree:
 
         i = 0
         while i < len(partial_expression):
+            print("i:", partial_expression[i])
             if partial_expression[i] == "(":
                 if i == 0:
                     parentheses_counter = 1
@@ -112,29 +113,73 @@ class Tree:
                             self.add_node(temp_root_index, ".", None, sub_tree_root, "l")
 
                         i = i + fin + 1
-            elif regex.match(r"[a-zA-Z*+?]", partial_expression[i]):
-                fin = i
-                for j in range(i+1, len(partial_expression)):
-                    if not regex.match(r"[a-zA-Z*+?]", partial_expression[j]):
-                        break
-                    fin = j
+            elif regex.match(r"[a-zA-Z]", partial_expression[i]):
+                # fin = i
+                # for j in range(i+1, len(partial_expression)):
+                #     if not regex.match(r"[a-zA-Z*+?]", partial_expression[j]):
+                #         break
+                #     fin = j
 
-                for k in range(i, fin + 1):
-                    if k + 1 < fin + 1:
-                        if k + 2 < fin + 1 and partial_expression[k+2] in ["*", "+", "?"]:
-                            self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node("*", Node(partial_expression[k+1]), None), "l")
-                            break
-                        else:
-                            if partial_expression[k+1] not in ["*", "+", "?"]:
-                                self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node(partial_expression[k+1]), "l")
-                            else:
-                                fin -= 1
-                                break
-                    elif len(range(i, fin + 1)) == 1 and regex.match(r"[a-z]", partial_expression[i]):
-                        self.add_node(temp_root_index, partial_expression[i], None, None, "l")
-                        break
+                # for k in range(i, fin + 1):
+                #     if k + 1 < fin + 1:
+                #         if k + 2 < fin + 1 and partial_expression[k+2] in ["*", "+", "?"]:
+                #             self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node("*", Node(partial_expression[k+1]), None), "l")
+                #             break
+                #         else:
+                #             if partial_expression[k+1] not in ["*", "+", "?"]:
+                #                 print("HOLA1")
+                #                 if temp_root_index is None and self.current_node_head is None:
+                #                     self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node(partial_expression[k+1]), "l")
+                #                 else:
+                #                     self.add_node(temp_root_index, ".", None, Node(partial_expression[k]), "l")
+                #             else:
+                #                 print("Avwer")
+                #                 fin -= 1
+                #                 break
+                #     elif len(range(i, fin + 1)) == 1 and regex.match(r"[a-z]", partial_expression[i]):
+                #         print("HOLA2", temp_root_index, self.current_node_head, partial_expression[i])
+                #         # self.add_node(temp_root_index, partial_expression[i], None, None, "l")
+                #         if temp_root_index is None and self.current_node_head is None:
+                #             self.add_node(temp_root_index, partial_expression[i], None, None, "l")
+                #         else:
+                #             self.add_node(temp_root_index, ".", None, Node(partial_expression[k]), "l")
+                #         break
+                # i = fin
 
-                i = fin
+                print("HOLA3", temp_root_index, self.current_node_head, partial_expression[i], i)
+                if ((temp_root_index is None and self.current_node_head is None) or i == 0) and i + 1 < len(partial_expression) and regex.match(r"[a-zA-Z]", partial_expression[i+1]):
+                    print("A", partial_expression[i])
+                    if i + 2 < len(partial_expression) and partial_expression[i+2] in ["*", "+", "?"]:
+                        print("A1")
+                        self.add_node(temp_root_index, ".", Node(partial_expression[i]), Node(partial_expression[i+2], Node(partial_expression[i+1]), None), "l")
+                        i += 2
+                    else:
+                        print("A2")
+                        self.add_node(temp_root_index, ".", Node(partial_expression[i]), Node(partial_expression[i+1]), "l")
+                        i += 1
+                elif (temp_root_index is None and self.current_node_head is not None) or i != 0:
+                    print("B")
+                    self.add_node(temp_root_index, ".", None, Node(partial_expression[i]), "l")
+                else:
+                    print("C",partial_expression[i], i)
+                    self.add_node(temp_root_index, partial_expression[i], None, None, "l")
+                    # if i < len(partial_expression) - 1:
+
+
+                # if i + 1 < len(partial_expression) and regex.match(r"[a-zA-Z]", partial_expression[i+1]):
+                #     if i - 1 > 0 and not regex.match(r"[a-zA-Z]", partial_expression[i-1]):
+                #         print("A", partial_expression[i])
+                #         self.add_node(temp_root_index, ".", None, Node(partial_expression[i]), "l")
+                #     else:
+                #         print("B", partial_expression[i], partial_expression[i+1])
+                #         self.add_node(temp_root_index, ".", Node(partial_expression[i]), Node(partial_expression[i+1]), "l")
+                #         if i + 1 == len(partial_expression) - 1:
+                #             i += 1
+                # else:
+                #     print("C",partial_expression[i])
+                #     self.add_node(temp_root_index, partial_expression[i], None, None, "l")
+                #     # if i < len(partial_expression) - 1:
+
 
                 if i + 1 < len(partial_expression):
                     if partial_expression[i+1] in ["*", "+", "?"]:
@@ -172,6 +217,9 @@ class Tree:
 
 if __name__ == "__main__":
     re = "abcd"
+    re = "(a|b)c"
+    re = "(b|b)ac"
+    re = "(b|b)abc"
     re = "a|b"
     re = "ab|c"
     re = "(ab)|c"
@@ -202,6 +250,7 @@ if __name__ == "__main__":
     re = "(c|(d|e))*abb"
     re = "(c|(d|(e|f)))*abc"
     re = "(c|(d|(e|f)))*abb|h"
+    re = "(c|(d|(e|f)))abb|h"
     re = "(c|(d|e))*abb|(a|b)"
     re = "(a|b)*abb|(c|(d|e))"
     re = "(c|(d|e))*abb(a|b)"
@@ -209,24 +258,18 @@ if __name__ == "__main__":
     re = "((c|(d|e))*)(a|b)"
     re = "(a|b)*abb(c|(d|e))"
     re = "((b|b)*abb(a|b)*)(a|b)*"
+    re = "((a|b)*((a|(bb))*))e"
 
     # - EXAMEN
     re = "(a|b)*"
     re = "((a|(bb))*)"
     re = "(a|b)*((a|(bb))*)"
+    re = "((a|b)*((a|(bb))*))E"
 
     # - EXAMPLE
     re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
 
-    # re = "((a|b)*((a|(bb))*))a"
-    # re = "(b|b)ac"
-    # re = "(b|b)a"
-
-    # re = "((a|b)*((a|(bb))*))#"
-    # re = "((a|b)*((a|(bb))*))EE"
-    # re = "((a|b)*((a|(bb))*))EEE"
-    # re = "((a|b)*.((a|(bb))*)).E#"
-    # re = "(a|b)*abb"
+    re = "((a|b)*((a|(bb))*))#"
     w = "babbaaaaa"
 
     ast = Tree(re)
