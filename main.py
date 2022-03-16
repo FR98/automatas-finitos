@@ -112,26 +112,26 @@ class Tree:
                             self.add_node(temp_root_index, ".", None, sub_tree_root, "l")
 
                         i = i + fin + 1
-            elif regex.match(r"[a-zA-Z*]", partial_expression[i]):
+            elif regex.match(r"[a-zA-Z*+?]", partial_expression[i]):
                 fin = i
                 for j in range(i+1, len(partial_expression)):
-                    if not regex.match(r"[a-zA-Z*]", partial_expression[j]):
+                    if not regex.match(r"[a-zA-Z*+?]", partial_expression[j]):
                         break
                     fin = j
 
                 for k in range(i, fin + 1):
                     if k + 1 < fin + 1:
-                        if k + 2 < fin + 1 and partial_expression[k+2] == "*":
+                        if k + 2 < fin + 1 and partial_expression[k+2] in ["*", "+", "?"]:
                             self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node("*", Node(partial_expression[k+1]), None), "l")
                             break
                         else:
-                            if partial_expression[k+1] != "*":
+                            if partial_expression[k+1] not in ["*", "+", "?"]:
                                 self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node(partial_expression[k+1]), "l")
                             else:
                                 fin -= 1
                                 break
                     elif len(range(i, fin + 1)) == 1 and regex.match(r"[a-z]", partial_expression[i]):
-                        self.add_node(temp_root_index, partial_expression[k], None, None, "l")
+                        self.add_node(temp_root_index, partial_expression[i], None, None, "l")
                         break
 
                 i = fin
@@ -207,7 +207,6 @@ if __name__ == "__main__":
     re = "(c|(d|e))*abb(a|b)"
     re = "(c|(d|e))*(a|b)"
     re = "((c|(d|e))*)(a|b)"
-    re = "(c|(d|e))*(a|b)"
     re = "(a|b)*abb(c|(d|e))"
     re = "((b|b)*abb(a|b)*)(a|b)*"
 
@@ -219,7 +218,10 @@ if __name__ == "__main__":
     # - EXAMPLE
     re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
 
-    re = "((a|b)*((a|(bb))*))a"
+    # re = "((a|b)*((a|(bb))*))a"
+    # re = "(b|b)ac"
+    # re = "(b|b)a"
+
     # re = "((a|b)*((a|(bb))*))#"
     # re = "((a|b)*((a|(bb))*))EE"
     # re = "((a|b)*((a|(bb))*))EEE"
