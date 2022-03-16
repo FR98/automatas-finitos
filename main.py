@@ -56,7 +56,7 @@ class Tree:
                     extra = 0
                     if parentheses_counter == 0 and partial_expression[j] == ")":
                         if j + 1 < len(partial_expression):
-                            if partial_expression[j+1] == "*" or partial_expression[j+1] == "+" or partial_expression[j+1] == "?":
+                            if partial_expression[j+1] in ["*", "+", "?"]:
                                 extra += 2
 
                         fin = j + extra
@@ -88,7 +88,7 @@ class Tree:
                         extra = 0
                         if parentheses_counter == 0:
                             if partial_expression[j] == ")" and j + 1 < len(partial_expression):
-                                if partial_expression[j+1] == "*" or partial_expression[j+1] == "+" or partial_expression[j+1] == "?":
+                                if partial_expression[j+1] in ["*", "+", "?"]:
                                     extra += 2
 
                             fin = j + extra
@@ -97,9 +97,10 @@ class Tree:
                             i = j
                             break
                 else:
-                    if partial_expression[i-1] in [")", "*", "+", "?"] or regex.match(r"[a-zA-Z]", partial_expression[i-1]):
+                    if partial_expression[i-1] in [")", "*", "+", "?"] or regex.match(r"[a-z]", partial_expression[i-1]):
                         fin_sub_re = self.get_final_of_expression(partial_expression[i:])
-                        fin = i + 1 + fin_sub_re + 1
+                        fin = i + 1 + fin_sub_re
+                        # print(partial_expression[i:fin])
                         self.get_nodes(partial_expression[i:fin], len(self.temp_roots))
 
                         if temp_root_index is None:
@@ -129,23 +130,24 @@ class Tree:
                             else:
                                 fin -= 1
                                 break
-                    elif len(range(i, fin + 1)) == 1 and regex.match(r"[a-zA-Z]", partial_expression[i]):
+                    elif len(range(i, fin + 1)) == 1 and regex.match(r"[a-z]", partial_expression[i]):
                         self.add_node(temp_root_index, partial_expression[k], None, None, "l")
                         break
 
                 i = fin
 
                 if i + 1 < len(partial_expression):
-                    if partial_expression[i+1] == "*" or partial_expression[i+1] == "+" or partial_expression[i+1] == "?":
+                    if partial_expression[i+1] in ["*", "+", "?"]:
                         self.add_node(temp_root_index, partial_expression[i+1], Node(partial_expression[i]), None, "l")
                     elif partial_expression[i+1] == ")":
                         if i + 2 < len(partial_expression):
-                            if partial_expression[i+2] == "*" or partial_expression[i+2] == "+" or partial_expression[i+2] == "?":
+                            if partial_expression[i+2] in ["*", "+", "?"]:
                                 self.add_node(temp_root_index, partial_expression[i+2], Node(partial_expression[i]), None, "l")
 
-            elif partial_expression[i] == "|" or partial_expression[i] == ".":
+            elif partial_expression[i] in ["|", "."]:
                 fin_sub_re = self.get_final_of_expression(partial_expression[i+1:])
                 fin = i + 1 + fin_sub_re + 1
+                # print(partial_expression[i+1:fin])
                 self.get_nodes(partial_expression[i+1:fin], len(self.temp_roots))
 
                 if temp_root_index is None:
@@ -158,7 +160,7 @@ class Tree:
 
                 if fin < len(partial_expression) and partial_expression[fin] == ")":
                     if fin + 1 < len(partial_expression):
-                        if partial_expression[fin+1] == "*" or partial_expression[fin+1] == "+" or partial_expression[fin+1] == "?":
+                        if partial_expression[fin+1] in ["*", "+", "?"]:
                             self.add_node(temp_root_index, partial_expression[fin+1], Node(partial_expression[fin+1]), None, "l")
 
                 i = i + fin + 1
@@ -213,12 +215,15 @@ if __name__ == "__main__":
     re = "(a|b)*"
     re = "((a|(bb))*)"
     re = "(a|b)*((a|(bb))*)"
-    re = "((a|b)*((a|(bb))*))(E)"
-    # re = "((a|b)*.((a|(bb))*)).E#"
 
     # - EXAMPLE
-    # re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
+    re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
 
+    re = "((a|b)*((a|(bb))*))a"
+    # re = "((a|b)*((a|(bb))*))#"
+    # re = "((a|b)*((a|(bb))*))EE"
+    # re = "((a|b)*((a|(bb))*))EEE"
+    # re = "((a|b)*.((a|(bb))*)).E#"
     # re = "(a|b)*abb"
     w = "babbaaaaa"
 
