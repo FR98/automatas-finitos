@@ -111,7 +111,7 @@ class Tree:
                             self.add_node(temp_root_index, ".", None, sub_tree_root, "l")
 
                         i = i + fin + 1
-            elif regex.match(r"[a-zA-Z]", partial_expression[i]):
+            elif regex.match(r"[a-zA-Z#]", partial_expression[i]):
                 # fin = i
                 # for j in range(i+1, len(partial_expression)):
                 #     if not regex.match(r"[a-zA-Z*+?]", partial_expression[j]):
@@ -141,7 +141,7 @@ class Tree:
                 #         break
                 # i = fin
 
-                if ((temp_root_index is None and self.current_node_head is None) or i == 0) and i + 1 < len(partial_expression) and regex.match(r"[a-zA-Z]", partial_expression[i+1]):
+                if ((temp_root_index is None and self.current_node_head is None) or i == 0) and i + 1 < len(partial_expression) and regex.match(r"[a-zA-Z#]", partial_expression[i+1]):
                     if i + 2 < len(partial_expression) and partial_expression[i+2] in ["*", "+", "?"]:
                         self.add_node(temp_root_index, ".", Node(partial_expression[i]), Node(partial_expression[i+2], Node(partial_expression[i+1]), None), "l")
                         i += 2
@@ -236,11 +236,12 @@ if __name__ == "__main__":
     re = "((a|(bb))*)"
     re = "(a|b)*((a|(bb))*)"
     re = "((a|b)*((a|(bb))*))E"
+    re = "((a|b)*((a|(bb))*))E#"
 
     # - EXAMPLE
     re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
 
-    re = "((a|b)*((a|(bb))*))#"
+    re = "(((a|b)*((a|(bb))*)))#"
     w = "babbaaaaa"
 
     ast = Tree(re)
