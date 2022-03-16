@@ -77,24 +77,40 @@ class Tree:
         i = 0
         while i < len(partial_expression):
             if partial_expression[i] == "(":
-                parentheses_counter = 1
-                for j in range(i+1, len(partial_expression)):
-                    if partial_expression[j] == "(":
-                        parentheses_counter += 1
-                    elif partial_expression[j] == ")":
-                        parentheses_counter -= 1
+                if i == 0:
+                    parentheses_counter = 1
+                    for j in range(i+1, len(partial_expression)):
+                        if partial_expression[j] == "(":
+                            parentheses_counter += 1
+                        elif partial_expression[j] == ")":
+                            parentheses_counter -= 1
 
-                    extra = 0
-                    if parentheses_counter == 0:
-                        if partial_expression[j] == ")" and j + 1 < len(partial_expression):
-                            if partial_expression[j+1] == "*" or partial_expression[j+1] == "+" or partial_expression[j+1] == "?":
-                                extra += 2
+                        extra = 0
+                        if parentheses_counter == 0:
+                            if partial_expression[j] == ")" and j + 1 < len(partial_expression):
+                                if partial_expression[j+1] == "*" or partial_expression[j+1] == "+" or partial_expression[j+1] == "?":
+                                    extra += 2
 
-                        fin = j + extra
-                        init = i + 1
-                        self.get_nodes(partial_expression[init:fin], temp_root_index)
-                        i = j
-                        break
+                            fin = j + extra
+                            init = i + 1
+                            self.get_nodes(partial_expression[init:fin], temp_root_index)
+                            i = j
+                            break
+                else:
+                    if partial_expression[i-1] in [")", "*", "+", "?"] or regex.match(r"[a-zA-Z]", partial_expression[i-1]):
+                        fin_sub_re = self.get_final_of_expression(partial_expression[i:])
+                        fin = i + 1 + fin_sub_re + 1
+                        self.get_nodes(partial_expression[i:fin], len(self.temp_roots))
+
+                        if temp_root_index is None:
+                            sub_tree_root = self.temp_roots.pop()
+                        else:
+                            sub_tree_root = self.temp_roots.pop(temp_root_index + 1)
+
+                        if sub_tree_root is not None:
+                            self.add_node(temp_root_index, ".", None, sub_tree_root, "l")
+
+                        i = i + fin + 1
             elif regex.match(r"[a-zA-Z*]", partial_expression[i]):
                 fin = i
                 for j in range(i+1, len(partial_expression)):
@@ -136,7 +152,6 @@ class Tree:
                     sub_tree_root = self.temp_roots.pop()
                 else:
                     sub_tree_root = self.temp_roots.pop(temp_root_index + 1)
-
 
                 if sub_tree_root is not None:
                     self.add_node(temp_root_index, partial_expression[i], Node(partial_expression[i-1]), sub_tree_root, "l")
@@ -187,24 +202,24 @@ if __name__ == "__main__":
     re = "(c|(d|(e|f)))*abb|h"
     re = "(c|(d|e))*abb|(a|b)"
     re = "(a|b)*abb|(c|(d|e))"
-    re = "(c|(d|e))*abb.(a|b)"
-    re = "(c|(d|e))*.(a|b)"
-    re = "((c|(d|e))*).(a|b)"
-    re = "(c|(d|e))*.(a|b)"
-    re = "(a|b)*abb.(c|(d|e))"
-    re = "((b|b)*abb.(a|b)*).(a|b)*"
+    re = "(c|(d|e))*abb(a|b)"
+    re = "(c|(d|e))*(a|b)"
+    re = "((c|(d|e))*)(a|b)"
+    re = "(c|(d|e))*(a|b)"
+    re = "(a|b)*abb(c|(d|e))"
+    re = "((b|b)*abb(a|b)*)(a|b)*"
 
     # - EXAMEN
     re = "(a|b)*"
     re = "((a|(bb))*)"
-    re = "(a|b)*.((a|(bb))*)"
-    re = "((a|b)*.((a|(bb))*)).E"
+    re = "(a|b)*((a|(bb))*)"
+    re = "((a|b)*((a|(bb))*))(E)"
     # re = "((a|b)*.((a|(bb))*)).E#"
 
     # - EXAMPLE
-    re = "(b|b)*abb.(a|b)*" # La del ejemplo de las instrucciones
+    # re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
 
-    re = "(a|b)*abb"
+    # re = "(a|b)*abb"
     w = "babbaaaaa"
 
     ast = Tree(re)
