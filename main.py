@@ -112,35 +112,6 @@ class Tree:
 
                         i = i + fin + 1
             elif regex.match(r"[a-zA-Z#]", partial_expression[i]):
-                # fin = i
-                # for j in range(i+1, len(partial_expression)):
-                #     if not regex.match(r"[a-zA-Z*+?]", partial_expression[j]):
-                #         break
-                #     fin = j
-
-                # for k in range(i, fin + 1):
-                #     if k + 1 < fin + 1:
-                #         if k + 2 < fin + 1 and partial_expression[k+2] in ["*", "+", "?"]:
-                #             self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node("*", Node(partial_expression[k+1]), None), "l")
-                #             break
-                #         else:
-                #             if partial_expression[k+1] not in ["*", "+", "?"]:
-                #                 if temp_root_index is None and self.current_node_head is None:
-                #                     self.add_node(temp_root_index, ".", Node(partial_expression[k]), Node(partial_expression[k+1]), "l")
-                #                 else:
-                #                     self.add_node(temp_root_index, ".", None, Node(partial_expression[k]), "l")
-                #             else:
-                #                 fin -= 1
-                #                 break
-                #     elif len(range(i, fin + 1)) == 1 and regex.match(r"[a-z]", partial_expression[i]):
-                #         # self.add_node(temp_root_index, partial_expression[i], None, None, "l")
-                #         if temp_root_index is None and self.current_node_head is None:
-                #             self.add_node(temp_root_index, partial_expression[i], None, None, "l")
-                #         else:
-                #             self.add_node(temp_root_index, ".", None, Node(partial_expression[k]), "l")
-                #         break
-                # i = fin
-
                 if ((temp_root_index is None and self.current_node_head is None) or i == 0) and i + 1 < len(partial_expression) and regex.match(r"[a-zA-Z#]", partial_expression[i+1]):
                     if i + 2 < len(partial_expression) and partial_expression[i+2] in ["*", "+", "?"]:
                         self.add_node(temp_root_index, ".", Node(partial_expression[i]), Node(partial_expression[i+2], Node(partial_expression[i+1]), None), "l")
@@ -242,6 +213,7 @@ if __name__ == "__main__":
     re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
 
     re = "(((a|b)*((a|(bb))*)))#"
+    re = "((a|b)*((a|(bb))*))#"
     w = "babbaaaaa"
 
     ast = Tree(re)
