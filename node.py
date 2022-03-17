@@ -1,6 +1,6 @@
 # -------------------------------------------------------
 # Diseño de Lenguajes de Programación
-# Tree
+# Node
 # Francisco Rosal - 18676
 # -------------------------------------------------------
 
@@ -11,7 +11,7 @@ class Node:
         self.data = data
         self.left = left
         self.right = right
-    
+
     @staticmethod
     def convert_to_binary_tree(parent_node, binary_tree_parent=None):
         if binary_tree_parent is None:
