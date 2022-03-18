@@ -35,6 +35,6 @@ class Node:
         else:
             return """{data}:{left},{right}""".format(
                 data = self.data,
-                left = self.left.data if self.left is not None else '',
-                right = self.right.data if self.right is not None else '',
+                left = self.left.data if self.left is not None else "",
+                right = self.right.data if self.right is not None else "",
             )

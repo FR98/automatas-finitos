@@ -4,8 +4,6 @@
 # Francisco Rosal - 18676
 # -------------------------------------------------------
 
-import json
-import graphviz
 from afn import AFN
 from afd import AFD
 from retree import RETree
@@ -82,15 +80,46 @@ re = "((a|b)*((a|(bb))*))E#"
 
 # - EXAMPLE
 re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
-
-# re = "(ab|c)"
-# re = "(a|b)*.((a|(bb))*)"
-# re = "(a|b)*abb"
-# re = "("+re+").H" # para algoritmo 3
 w = "babbaaaaa"
 
+# - EXEC THIS
+re = "(b|b)*abb(a|b)*" # La del ejemplo de las instrucciones
+w = "babbaaaaa"
 
-ast = RETree(re)
-tree = ast.get_tree()
+ret = RETree(re)
+tree = ret.get_tree()
 print(tree)
-print([chr(n.value) for n in tree.postorder])
+
+thompson = Thompson(tree)
+thompson.draw()
+
+final_state = thompson.cantidad_estados
+alfabeto = thompson.alfabeto
+transiciones = thompson.transiciones
+
+input()
+
+if AFN.simulacion(w, alfabeto, transiciones, "S" + str(final_state-1)):
+    print("Si pertenece")
+else:
+    print("No pertenece")
+
+subconjuntos = Subconjuntos(transiciones, alfabeto, final_state)
+subconjuntos.run()
+subconjuntos.draw()
+
+input()
+
+re = "(" + re + ")#"
+ret = RETree(re)
+tree = ret.get_tree()
+print(tree)
+
+afd = AFD(tree)
+afd.get_transiciones()
+afd.draw()
+
+if afd.simulacion(w):
+    print("Si pertenece")
+else:
+    print("No pertenece")
