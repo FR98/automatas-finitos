@@ -97,7 +97,7 @@ final_state = thompson.cantidad_estados
 alfabeto = thompson.alfabeto
 transiciones = thompson.transiciones
 
-input()
+input("Enter para continuar")
 
 if AFN.simulacion(w, alfabeto, transiciones, "S" + str(final_state-1)):
     print("Si pertenece")
@@ -108,7 +108,7 @@ subconjuntos = Subconjuntos(transiciones, alfabeto, final_state)
 subconjuntos.run()
 subconjuntos.draw()
 
-input()
+input("Enter para continuar")
 
 re = "(" + re + ")#"
 ret = RETree(re)
